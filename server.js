@@ -20,7 +20,11 @@
 
 import express from "express" // Importamos el framework 
 
+import producto from "./data/fs/ProductFsManager.js"
+
 const server = express(); // Instanciamos al server
+
+server.use(express.urlencoded({extended: true}))
 
 const port = 8080 // Asignamos el número de puerto
 
@@ -28,4 +32,47 @@ const ready = () => console.log(`Server ready on port ${port}`); // Imprimimos e
 
 server.listen(port,ready)
 
-const indexRoute = "/" // Ruta de inicio 
+server.get("/api/products",(req,res) => {
+    try {
+        const allproducts = producto.read()
+        if(Array.isArray(allproducts)){ // comprobamos si allproducts es un array
+            return res.status(200).json({
+                succes : true,
+                response : allproducts
+            })
+        }else{
+            return res.status(404).json({
+                succes : false,
+                response : allproducts
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            succes : false,
+            message : error.message
+        })
+    }
+})
+
+server.get("/api/products/:pid",(req,res) => {
+    try {
+        const {pid} = req.params
+        const product = producto.readOne(pid)
+        if(typeof(product) === 'object'){
+            return res.status(200).json({
+                succes : true,
+                product
+            })
+        }else{
+            res.status(404).json({
+                succes : false,
+                response : "Not found!"
+            })
+        }
+    } catch (error) {
+        res.status(500).json({
+            succes : false,
+            response: error.message
+        })
+    }
+})

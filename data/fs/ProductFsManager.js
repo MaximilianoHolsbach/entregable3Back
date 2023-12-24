@@ -53,7 +53,7 @@ class ProductManager {
 
   readOne(id) {
     const productById = this.products.find(
-      (product) => product.id === Number(id)
+      (product) => product.id == (id)
     ); // Utilizamos el metodo .find para iterar el array y comparar el valor de la clave id con la ingresada
     try {
       if (!productById) {
@@ -80,7 +80,7 @@ class ProductManager {
   }
 }
 
-const producto = new ProductManager("files/productManager.json");
+const producto = new ProductManager("./data/fs/files/productManager.json");
 
 export default producto
 /*
@@ -115,8 +115,8 @@ producto.create({
 */
 //console.log(producto.read());
 
-//console.log(producto.readOne(3));
+//console.log(producto.readOne(1));
 
-producto.destroy(3)
+//producto.destroy(3)
 
-console.log(producto.read());
+//console.log(producto.read());
