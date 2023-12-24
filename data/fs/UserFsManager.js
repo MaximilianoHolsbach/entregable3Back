@@ -1,10 +1,4 @@
-const fs = require("fs");
-
-const { promisify } = require("util"); // Convierte funciones basadas en callbacks en funciones que devuelven promesas
-
-// Utilizamos estos modulos promisify(fs.readFile), promisify(fs.writeFile); para cambiar de funciones asincronas a funciones que devuelven promesas
-
-const writeFileAsync = promisify(fs.writeFile);
+import fs from "fs";
 
 class UserManager {
   constructor(ruta) {
@@ -38,7 +32,7 @@ class UserManager {
       };
       this.users.push(user); // Pusheamos al usario en el array
       const usersFile = JSON.stringify(this.users, null, 2); // Pasamos a texto plano el array actualizado
-      await writeFileAsync(this.ruta, usersFile, "utf-8"); // Actualizamos el contenido del archivo
+      await fs.promises.writeFile(this.ruta, usersFile, "utf-8"); // Actualizamos el contenido del archivo
     } catch (error) {
       return error.message;
     }
@@ -68,9 +62,25 @@ class UserManager {
       return error.message;
     }
   }
+
+  async destroy(id){
+    try {
+      const index = this.users.findIndex((user) => user.id === Number(id))
+      if (index === -1){
+        throw new Error(`El id ${id} ingresado no corresponde a ningún usuario`)
+      }
+      this.users.splice(index,1)[0]
+      const users = JSON.stringify(this.users,null,2)
+      await fs.promises.writeFile(this.ruta,users,"utf-8")
+    } catch (error) {
+      return error.message;
+    }
+  }
 }
 
-const user = new UserManager("data/userManager.json");
+const user = new UserManager("files/userManager.json");
+
+export default user 
 /*
 user.create({
   name: "Andres",
@@ -97,6 +107,10 @@ user.create({
   email: "Cinthia@gamil.com",
 });
 */
-console.log(user.read());
+//console.log(user.read());
 
-console.log(user.readOne(2));
+//console.log(user.readOne(2));
+
+user.destroy(3)
+
+console.log(user.read());

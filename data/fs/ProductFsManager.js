@@ -1,10 +1,4 @@
-const fs = require("fs");
-
-const { promisify } = require("util"); // Convierte funciones basadas en callbacks en funciones que devuelven promesas
-
-// Utilizamos estos modulos promisify(fs.readFile), promisify(fs.writeFile); para cambiar de funciones asincronas a funciones que devuelven promesas
-const readFileAsync = promisify(fs.readFile);
-const writeFileAsync = promisify(fs.writeFile);
+import fs from "fs"
 
 class ProductManager {
   constructor(ruta) {
@@ -39,7 +33,7 @@ class ProductManager {
       };
       this.products.push(product); // Pusheamos al producto en el array
       const productsFile = JSON.stringify(this.products, null, 2); // Pasamos a texto plano el array actualizado
-      await writeFileAsync(this.ruta, productsFile, "utf-8"); // Actualizamos el contenido del archivo
+      await fs.promises.writeFile(this.ruta, productsFile, "utf-8"); // Actualizamos el contenido del archivo
     } catch (error) {
       return error.message;
     }
@@ -71,9 +65,24 @@ class ProductManager {
       return error.message;
     }
   }
+  async destroy(id){
+    try {
+      const index = this.products.findIndex((product) => product.id === Number(id))
+      if(index === -1){
+        throw new Error(`El id ${id} ingresado no corresponde a ningún producto`)
+      }
+      this.products.splice(index, 1)[0]
+      const carrito = JSON.stringify(this.products,null,2)
+      await fs.promises.writeFile(this.ruta,carrito,"utf-8")
+    } catch (error) {
+      return error.message
+    }
+  }
 }
 
-const producto = new ProductManager("data/productManager.json");
+const producto = new ProductManager("files/productManager.json");
+
+export default producto
 /*
 producto.create({
   title: "TONER MP301",
@@ -104,6 +113,10 @@ producto.create({
   stock: 50,
 });
 */
-console.log(producto.read());
+//console.log(producto.read());
 
-console.log(producto.readOne(3));
+//console.log(producto.readOne(3));
+
+producto.destroy(3)
+
+console.log(producto.read());
