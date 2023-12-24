@@ -65,6 +65,11 @@ class ProductManager{
     readOne(id){
         return ProductManager.#productos.find(each => each.id == Number(id))
     }
+    destroy(id){
+        const index = ProductManager.#productos.findIndex((product) => product.id === Number(id))
+        ProductManager.#productos.splice(index, 1)[0]
+        return ProductManager.#productos
+    }
 }
 
 const productos = new ProductManager(
@@ -92,5 +97,6 @@ productos.create(
 
 console.log(productos.read())
 
-console.log(productos.readOne(2))
+console.log(productos.readOne(1))
 
+console.log(productos.destroy(2))

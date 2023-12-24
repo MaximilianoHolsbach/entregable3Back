@@ -63,6 +63,11 @@ class UserManager{
     readOne(id){
         return UserManager.#usuarios.find(each => each.id == Number(id))
     }
+    destroy(id){
+        const index = UserManager.#usuarios.findIndex((user) => usuarios.id === Number(id))
+        UserManager.#usuarios.splice(index,1)[0]
+        return UserManager.#usuarios
+    }
 }
 
 const usuarios = new UserManager (
@@ -87,4 +92,6 @@ usuarios.create(
 console.log(usuarios.read());
 
 console.log(usuarios.readOne(3));
+
+console.log(usuarios.destroy(2));
 
