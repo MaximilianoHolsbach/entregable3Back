@@ -1,4 +1,4 @@
-import fs from "fs"
+import fs from "fs";
 
 class ProductManager {
   constructor(ruta) {
@@ -52,9 +52,7 @@ class ProductManager {
   }
 
   readOne(id) {
-    const productById = this.products.find(
-      (product) => product.id == (id)
-    ); // Utilizamos el metodo .find para iterar el array y comparar el valor de la clave id con la ingresada
+    const productById = this.products.find((product) => product.id == id); // Utilizamos el metodo .find para iterar el array y comparar el valor de la clave id con la ingresada
     try {
       if (!productById) {
         throw new Error("El id ingresado no corresponde a ningún producto");
@@ -65,24 +63,28 @@ class ProductManager {
       return error.message;
     }
   }
-  async destroy(id){
+  async destroy(id) {
     try {
-      const index = this.products.findIndex((product) => product.id === Number(id))
-      if(index === -1){
-        throw new Error(`El id ${id} ingresado no corresponde a ningún producto`)
+      const index = this.products.findIndex(
+        (product) => product.id === Number(id)
+      );
+      if (index === -1) {
+        throw new Error(
+          `El id ${id} ingresado no corresponde a ningún producto`
+        );
       }
-      this.products.splice(index, 1)[0]
-      const carrito = JSON.stringify(this.products,null,2)
-      await fs.promises.writeFile(this.ruta,carrito,"utf-8")
+      this.products.splice(index, 1)[0];
+      const carrito = JSON.stringify(this.products, null, 2);
+      await fs.promises.writeFile(this.ruta, carrito, "utf-8");
     } catch (error) {
-      return error.message
+      return error.message;
     }
   }
 }
 
 const producto = new ProductManager("./data/fs/files/productManager.json");
 
-export default producto
+export default producto;
 /*
 producto.create({
   title: "TONER MP301",

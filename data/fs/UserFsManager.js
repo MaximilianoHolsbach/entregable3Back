@@ -63,24 +63,26 @@ class UserManager {
     }
   }
 
-  async destroy(id){
+  async destroy(id) {
     try {
-      const index = this.users.findIndex((user) => user.id === Number(id))
-      if (index === -1){
-        throw new Error(`El id ${id} ingresado no corresponde a ningún usuario`)
+      const index = this.users.findIndex((user) => user.id === Number(id));
+      if (index === -1) {
+        throw new Error(
+          `El id ${id} ingresado no corresponde a ningún usuario`
+        );
       }
-      this.users.splice(index,1)[0]
-      const users = JSON.stringify(this.users,null,2)
-      await fs.promises.writeFile(this.ruta,users,"utf-8")
+      this.users.splice(index, 1)[0];
+      const users = JSON.stringify(this.users, null, 2);
+      await fs.promises.writeFile(this.ruta, users, "utf-8");
     } catch (error) {
       return error.message;
     }
   }
 }
 
-const user = new UserManager("files/userManager.json");
+const user = new UserManager("./data/fs/files/userManager.json");
 
-export default user 
+export default user;
 /*
 user.create({
   name: "Andres",
@@ -111,6 +113,6 @@ user.create({
 
 //console.log(user.readOne(2));
 
-user.destroy(3)
+//user.destroy(3)
 
-console.log(user.read());
+//console.log(user.read());
